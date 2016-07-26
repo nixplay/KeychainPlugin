@@ -21,7 +21,7 @@ The plugin's JavaScript functions are called after creating the plugin object th
 
 ### iCloud keychain enabled
 
-iCloud keychain synchonizing is enabled, so the keychain will be mirrored across all devices *if* the user is signed in to iCloud (Settings > iCloud) and has iCloud keychain turned on (Settings > iCloud > Keychain)
+iCloud keychain synchonizing is enabled by default, so the keychain will be mirrored across all devices *if* the user is signed in to iCloud (Settings > iCloud) and has iCloud keychain turned on (Settings > iCloud > Keychain). It is possible to disable synchronizing entries to iCloud when setting keys.
 
 ### Usage
         
@@ -68,8 +68,9 @@ kc.getForKey(successCallback, failureCallback, 'key', 'servicename');
  @param key the key to set
  @param servicename the servicename to use
  @param value the value to set
+ @param sync if the entry should be synchronized to iCloud or not (optional, defaults to true)
  */
-kc.setForKey(successCallback, failureCallback, 'key', 'servicename', 'value');
+kc.setForKey(successCallback, failureCallback, 'key', 'servicename', 'value', sync);
 
 /*
  Removes a value for a key and servicename.

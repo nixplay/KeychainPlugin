@@ -63,9 +63,14 @@
             NSString* key = [arguments objectAtIndex:0];
             NSString* serviceName = [arguments objectAtIndex:1];
             NSString* value = [arguments objectAtIndex:2];
+            BOOL sync = true;
+            if ([arguments count] >= 4) {
+              sync = [[arguments objectAtIndex:3] boolValue];
+            }
+
             NSError* error = nil;
-            
-            BOOL stored = [SFHFKeychainUtils storeUsername:key andPassword:value forServiceName:serviceName updateExisting:YES error:&error];
+
+            BOOL stored = [SFHFKeychainUtils storeUsername:key andPassword:value forServiceName:serviceName updateExisting:YES sync:sync error:&error];
             if (stored && error == nil) {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             } else {
