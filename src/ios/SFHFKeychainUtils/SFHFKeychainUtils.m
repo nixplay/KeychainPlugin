@@ -79,7 +79,7 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
                         kSecClassGenericPassword,
                         username,
                         serviceName,
-                        kCFBooleanTrue,
+                        kSecAttrSynchronizableAny,
                         nil];
     
     NSMutableDictionary *query = [[NSMutableDictionary alloc] initWithObjects: objects forKeys: keys];
@@ -152,8 +152,8 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
     return password;
 }
 
-+ (BOOL) storeUsername: (NSString *)username andPassword: (NSString *)password forServiceName: (NSString *)serviceName updateExisting: (BOOL)updateExisting error: (NSError **)error {
-    
++ (BOOL) storeUsername: (NSString *)username andPassword: (NSString *)password forServiceName: (NSString *)serviceName updateExisting: (BOOL)updateExisting sync: (BOOL)sync error: (NSError **)error {
+
     if (!username || !password || !serviceName) {
         if (error != nil) {
             *error = [NSError errorWithDomain: SFHFKeychainUtilsErrorDomain code: -2000 userInfo: nil];
@@ -211,12 +211,12 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
                                 serviceName,
                                 serviceName,
                                 username,
-                                kCFBooleanTrue,
+                                kSecAttrSynchronizableAny,
                                 nil];
             
             NSDictionary *query = [[NSDictionary alloc] initWithObjects: objects forKeys: keys];
-            
-            status = SecItemUpdate((__bridge CFDictionaryRef) query, (__bridge CFDictionaryRef) [NSDictionary dictionaryWithObject: [password dataUsingEncoding: NSUTF8StringEncoding] forKey: (__bridge NSString *) kSecValueData]);
+
+            status = SecItemUpdate( (__bridge CFDictionaryRef) query, (__bridge CFDictionaryRef) [NSDictionary dictionaryWithObject: [password dataUsingEncoding: NSUTF8StringEncoding] forKey: (__bridge NSString *) kSecValueData]);
         }
     }
     else {
@@ -238,7 +238,7 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
                             serviceName,
                             username,
                             [password dataUsingEncoding: NSUTF8StringEncoding],
-                            kCFBooleanTrue,
+                            sync ? kCFBooleanTrue : kCFBooleanFalse,
                             nil];
         
         NSDictionary *query = [[NSDictionary alloc] initWithObjects: objects forKeys: keys];
@@ -259,7 +259,7 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
     return YES;
 }
 
-+ (BOOL) deleteItemForUsername: (NSString *) username andServiceName: (NSString *) serviceName error: (NSError **) error 
++ (BOOL) deleteItemForUsername: (NSString *) username andServiceName: (NSString *) serviceName error: (NSError **) error
 {
     if (!username || !serviceName) 
     {

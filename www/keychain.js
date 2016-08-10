@@ -30,9 +30,12 @@ Keychain.prototype.getForKey = function(successCallback, failureCallback, key, s
 	exec(successCallback, failureCallback, this.serviceName, "getForKey", [key, servicename]);
 }
 
-Keychain.prototype.setForKey = function(successCallback, failureCallback, key, servicename, value)
+Keychain.prototype.setForKey = function(successCallback, failureCallback, key, servicename, value, sync)
 {
-	exec(successCallback, failureCallback, this.serviceName, "setForKey", [key, servicename, value]);
+	if(typeof sync === 'undefined') {
+		sync = true;
+	}
+	exec(successCallback, failureCallback, this.serviceName, "setForKey", [key, servicename, value, sync]);
 }
 
 Keychain.prototype.removeForKey = function(successCallback, failureCallback, key, servicename)
